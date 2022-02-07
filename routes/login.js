@@ -2,12 +2,13 @@ var express = require('express');
 var router = express.Router();
 
 var mysql = require('mysql');
+const app = require('../app');
 
 var connection = mysql.createConnection({
-    host: '',
-    user: '',
-    database: '',
-    password: '',
+    host: process.env.dbHOST,
+    user: process.env.dbUSER,
+    database: process.env.dbLOGIN,
+    password: process.env.dbPW,
     port: 3306
 })
 
