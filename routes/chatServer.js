@@ -1,5 +1,9 @@
 const express = require('express')
-const path = require('path')
+var router = express.Router();
+
+//const path = require('path');
+//const { send } = require('process');
+
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -12,12 +16,9 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-//서버연결하기 직전에뜸
 console.log("outside io");
 
 io.on('connection', function(socket){
-
-  //로그인하면 이거 밑에 두개뜸
   console.log('User Conncetion');
 
   socket.on('connect user', function(user){
@@ -28,13 +29,13 @@ io.on('connection', function(socket){
     io.emit('connect user', user);
   });
 
-  //타이핑중에 이거뜸
+
   socket.on('on typing', function(typing){
     console.log("Typing.... ");
     io.emit('on typing', typing);
   });
 
-  //메세지 입력하면 서버 로그에 이거뜸
+  
   socket.on('chat message', function(msg){
     console.log("Message " + msg['message']);
     console.log(msg['roomName'] + "에서 보내는 메세지 : " + msg['script']);
@@ -42,7 +43,13 @@ io.on('connection', function(socket){
   });
 });
 
-//맨처음에 서버 연결하면 몇번포트에 서버 연결되어있는지 ㅇㅇ
+/*맨처음에 서버 연결하면 몇번포트에 서버 연결되어있는지 ㅇㅇ
 http.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
+});*/
+
+router.get('/', function (req, res){
+  res.send('this is get from chatServer! Hey!');
 });
+
+module.exports = router;

@@ -22,4 +22,10 @@ connection.query('SELECT * from User', (error, rows, fields) => {
     console.log('User info is: ', rows);
   });
 
+
+  /* GET users listing. */
+router.get('/', function(req, res, next) {
+    res.send('this is login');
+  });
+
 module.exports = router;
