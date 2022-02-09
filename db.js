@@ -5,7 +5,8 @@ let pool = mysql.createPool(config);
 
 function getConnection(callback) {
   pool.getConnection(function (err, conn) {
-    if(!err) {
+      if(err) throw err;
+      else{
         console.log('db connect! from db.js');
         callback(conn);
     }
