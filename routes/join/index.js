@@ -3,9 +3,9 @@ var router = express.Router();
 const controller = require('./join.controller');
 
 /* GET home page. */
-router.get('/', controller.join);
+router.get('/login_get', controller.join);
 
-router.post('/login', controller.login);//로그인 하면 db에 사용자 정보 저장하기
+router.post('/login', controller.loginCheck);//로그인 하면 db에 사용자 정보 저장하기
 
 module.exports = router;
 
