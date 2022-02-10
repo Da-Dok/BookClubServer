@@ -1,4 +1,5 @@
 var express = require('express');
+const req = require('express/lib/request');
 var router = express.Router();
 
 
@@ -29,6 +30,7 @@ connection.query('SELECT * from User', (error, rows, fields) => {
     });
     conn.release();
   });
+
 
 
 
