@@ -32,7 +32,7 @@ loginCheck = (req, res) =>{
                     console.log("기존 계정");
                     res.json({
                         'code': resultCode,
-                        'message': message
+                        'msg': message
                     });
                 }
             }
@@ -76,7 +76,7 @@ loginFirst = (req, res)=>{
     
             res.json({
                 'code': resultCode,
-                'message': message
+                'msg': message
             });
         });
         conn.release();
