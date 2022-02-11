@@ -17,6 +17,7 @@ loginCheck = (req, res) =>{
             var resultCode = 404;
             var message = '에러 발생 on join.controller'
             if (err){
+                console.log("로그인 체크 실패");
                 console.log(err);
             }else {
                 //최초 로그인시 sqlInsert 실행->firstLogin 실행
@@ -61,11 +62,16 @@ loginFirst = (req, res)=>{
             var message = 'error on sqlInsert 회원정보: 첫 로그인';
     
             if (err) {
+                console.log("로그인 insert 실패");
                 console.log(err);
             } else {
                 resultCode = 200;
                 message = '첫 로그인 성공. db에 저장 성공';
                 console.log('첫 로그인 성공. db에 저장 성공');
+                conn.query('SELECT * from User', (error, rows, fields) => {
+                    if (error) throw error;
+                    console.log('User info after insert is: ', rows);
+                  });
             }
     
             res.json({
