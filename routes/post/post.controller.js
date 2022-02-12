@@ -1,14 +1,46 @@
+const getConnection = require('../../db');
+
 post_get=(req, res, next)=>{
-    res.send("this is post")
+    var sqlSelect = 'select * from Post';
+    //var params = [userId, title, content, contentImg, created];
+
+    res.send("this is post");
+    getConnection((conn) => {
+
+        conn.query(sqlSelect, function (err, rows) {
+            var resultCode = 404;
+            var message = 'error on sqlSelect Post';//15개 정도씩만 가져오면 좋겠다
+    
+            if (err) {
+                console.log("postdb 가져오기 실패");
+                console.log(err);
+            } else {
+                resultCode = 200;
+                message = 'post db 가져오기 성공';
+                console.log('post db 가져오기  성공');
+                res.json({
+                    'data': rows,//select한 정보 보냄
+                    'code': resultCode,
+                    'message': message
+                });
+            }
+    
+            
+        });
+        conn.release();
+      });
 }
 
-post=(req, res, next)=>{//sql instert 실행
+post=(req, res)=>{//sql instert 실행
+    console.log("hello");
     var userId = req.body.userId;//userID가 userEmail
     var title = req.body.title;
     var content = req.body.content;
     var contentImg = req.body.contentImg;
     var created = req.body.created;
     //var updated = req.body.updated;->수정할 때 사용
+
+    console.log("userId: " + userId)
 
     var sqlInsert = 'INSERT INTO Post (userId, title, content, contentImg, created) VALUES (?, ?, ?, ?, ?)';
     var params = [userId, title, content, contentImg, created];
@@ -34,6 +66,7 @@ post=(req, res, next)=>{//sql instert 실행
             }
     
             res.json({
+                'data': rows,
                 'code': resultCode,
                 'message': message
             });
