@@ -19,7 +19,7 @@ post_get=(req, res, next)=>{
                 message = 'post db 가져오기 성공';
                 console.log('post db 가져오기  성공');
                 res.json({
-                    data: rows,//select한 정보 보냄
+                    'data': rows,//select한 정보 보냄
                     'code': resultCode,
                     'message': message
                 });
@@ -66,6 +66,7 @@ post=(req, res)=>{//sql instert 실행
             }
     
             res.json({
+                'data': rows,
                 'code': resultCode,
                 'message': message
             });

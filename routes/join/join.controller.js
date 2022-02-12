@@ -31,8 +31,9 @@ loginCheck = (req, res) =>{
                     message = '기존 유저 로그인 성공!' + result[0].userName + '님 welcomeback';
                     console.log("기존 계정");
                     res.json({
+                        'success': "true",
                         'code': resultCode,
-                        'msg': message
+                        'message': message
                     });
                 }
             }
@@ -73,8 +74,9 @@ loginFirst = (req, res)=>{
             }
     
             res.json({
+                'success': "true",
                 'code': resultCode,
-                'msg': message
+                'message': message
             });
         });
         conn.release();
