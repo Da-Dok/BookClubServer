@@ -2,9 +2,7 @@ const getConnection = require('../../db');
 
 post_get=(req, res, next)=>{
     var sqlSelect = 'select * from Post';
-    //var params = [userId, title, content, contentImg, created];
-
-    res.send("this is post");
+    
     getConnection((conn) => {
 
         conn.query(sqlSelect, function (err, rows) {
