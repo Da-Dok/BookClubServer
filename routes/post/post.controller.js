@@ -60,14 +60,13 @@ post=(req, res)=>{//sql instert 실행
                 conn.query('SELECT * from Post', (error, rows, fields) => {
                     if (error) throw error;
                     console.log('남긴 글: ', rows);
+                    res.json({
+                        'data': rows,
+                        'code': resultCode,
+                        'message': message
+                    });
                   });
             }
-    
-            res.json({
-                'data': rows,
-                'code': resultCode,
-                'message': message
-            });
         });
         conn.release();
       });

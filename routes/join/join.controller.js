@@ -6,13 +6,13 @@ join = (req, res, next) =>{
 }
 
 //userToken으로 가입된 정보인지 확인
-loginCheck = (req, res) =>{
-    //앱에서 정보 받아오기
-    //var userEmail = req.body.userEmail;
-    var {email, nickname, token, img} = req.body;//토큰 정보 보냄.
-
-    var payload = checkGoogleJWT.verify(token);//토큰 검증
+loginCheck = async(req, res) =>{
     var sqlCheck = 'select * from User where userId = ?';
+    var{email, nickname, token, img} = req.body;
+    
+    var payload = await checkGoogleJWT.verify(token);
+    console.log(payload);
+    console.log("payload: " , payload['sub']);
 
     getConnection((conn) => {//최초 로그인, 기존 로그인 판별
         conn.query(sqlCheck, payload['sub'], function(err, result){//payload의 sub으로 구분
@@ -25,7 +25,7 @@ loginCheck = (req, res) =>{
                 //최초 로그인시 sqlInsert 실행->firstLogin 실행
                 if (result.length === 0){
                     console.log("최초 로그인");
-                    loginFirst(payload);//이게 되는지 모르겠다
+                    loginFirst(payload, req, res);//이게 되는지 모르겠다
                 }else{
                     resultCode = 308;
                     message = '기존 유저 로그인 성공!' + result[0].userName + '님 welcomeback';
@@ -41,12 +41,10 @@ loginCheck = (req, res) =>{
         });
 
         conn.release();
-      });
-      
-
+      });     
 }
 
-loginFirst = (payload)=>{
+loginFirst = (payload, req, res)=>{
     // sql 문의 ?는 두번째 매개변수로 넘겨진 params의 값으로 치환된다.
 
     //var {email, nickname, token, img} = req.body;//여기까진 했어
@@ -70,26 +68,24 @@ loginFirst = (payload)=>{
                 resultCode = 200;
                 message = '첫 로그인 성공. db에 저장 성공';
                 console.log('첫 로그인 성공. db에 저장 성공');
+
                 conn.query('SELECT * from User', (error, rows, fields) => {
                     if (error) throw error;
                     console.log('User info after insert is: ', rows);
-                  });
+                });
+
+                res.json({
+                    'success': "true",
+                    'code': resultCode,
+                    'message': message
+                });
             }
-    
-            res.json({
-                'success': "true",
-                'code': resultCode,
-                'message': message
-            });
         });
         conn.release();
       });
     
 }
 
-googleCheck = ()=>{
-
-}
 
 module.exports = {
     join,
