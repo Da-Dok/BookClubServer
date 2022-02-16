@@ -1,51 +1,84 @@
+const { listen } = require('express/lib/application');
 const getConnection = require('../../db');
+const data = {};
 
-post_get=(req, res, next)=>{
-    var sqlSelect = 'select * from Post';
-    
-    getConnection((conn) => {
+selectPostDetail=(req, res, next)=>{//id에 맞는거 정보 가져오기
+    let token = req.body.token;
+    const {idx } = req.params;
+    console.log("postId: ", idx);
 
-        conn.query(sqlSelect, function (err, rows) {
+    let sqlSelect = "select * from Post where postId = ?"//Post랑 PostTable 전부 조인
+
+    getConnection((conn) => {//token이랑 PostID 받아옴
+
+        conn.query(sqlSelect, idx, function (err, rows) {
             var resultCode = 404;
-            var message = 'error on sqlSelect Post';//15개 정도씩만 가져오면 좋겠다
+            var message = 'error on selectPostDetail';//15개 정도씩만 가져오면 좋겠다
     
             if (err) {
-                console.log("postdb 가져오기 실패");
+                console.log("selectPostDetail 실패");
                 console.log(err);
             } else {
                 resultCode = 200;
-                message = 'post db 가져오기 성공';
-                console.log('post db 가져오기  성공');
+                message = 'selectPostDetail 성공';
+                console.log('selectPostDetail 성공');
+                res.json({
+                    'data': rows,//select한 정보 보냄
+                    'code': resultCode,
+                    'message': message
+                });
+            }            
+        });
+        conn.release();
+      });
+}
+
+selectPostList=(req, res, next)=>{//리스트에 넣을 포스트 정보 가져오기
+    let token = req.body.token;
+    let page = req.body.page;
+
+    var sqlSelect = 'select * from Post';//Post랑 PostTable 조인해서 
+    
+    getConnection((conn) => {//token이랑 page 받아옴
+
+        conn.query(sqlSelect, function (err, rows) {
+            var resultCode = 404;
+            var message = 'error on selectPostListt';//15개 정도씩만 가져오면 좋겠다
+    
+            if (err) {
+                console.log("selectPostList 실패");
+                console.log(err);
+            } else {
+                resultCode = 200;
+                message = 'selectPostList 성공';
+                console.log('selectPostList  성공');
                 res.json({
                     'data': rows,//select한 정보 보냄
                     'code': resultCode,
                     'message': message
                 });
             }
-    
-            
         });
         conn.release();
       });
 }
 
-post=(req, res)=>{//sql instert 실행
+insertPost=(req, res)=>{//sql instert 실행
     console.log("hello");
     var userId = req.body.userId;//userID가 userEmail
     var title = req.body.title;
     var content = req.body.content;
     var contentImg = req.body.contentImg;
     var created = req.body.created;
-    //var updated = req.body.updated;->수정할 때 사용
 
     console.log("userId: " + userId)
 
-    var sqlInsert = 'INSERT INTO Post (userId, title, content, contentImg, created) VALUES (?, ?, ?, ?, ?)';
+    var sqlInsert = 'INSERT INTO Post (userId, title, content, contentImg, created, state, likeState) VALUES (?, ?, ?, ?, ?, "모집중", 0)';
     var params = [userId, title, content, contentImg, created];
 
     getConnection((conn) => {
 
-        conn.query(sqlInsert, params, function (err, result) {
+        conn.query(sqlInsert, params, function (err) {
             var resultCode = 404;
             var message = 'error on sqlInsert Post';
     
@@ -57,21 +90,18 @@ post=(req, res)=>{//sql instert 실행
                 resultCode = 200;
                 message = 'post db에 저장 성공';
                 console.log('post db에 저장 성공');
-                conn.query('SELECT * from Post', (error, rows, fields) => {
-                    if (error) throw error;
-                    console.log('남긴 글: ', rows);
-                    res.json({
-                        'data': rows,
-                        'code': resultCode,
-                        'message': message
-                    });
-                  });
+                res.json({
+                    //'data': rows,
+                    'code': resultCode,
+                    'message': message
+                });
             }
         });
         conn.release();
       });
 }
 module.exports={
-    post_get,
-    post
+    selectPostDetail,
+    selectPostList,
+    insertPost
 }

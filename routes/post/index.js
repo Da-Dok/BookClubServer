@@ -2,8 +2,11 @@ var express = require('express');
 var router = express.Router();
 const controller = require('./post.controller');
 
-router.get("/", controller.post_get)
+router.get("/postList", controller.selectPostList);
+router.get("/postDetail/:idx", controller.selectPostDetail)
 
-router.post("/post", controller.post)
+router.post("/insertPost", controller.insertPost);
 
 module.exports = router;
+
+///////////////////////////////post 주소 변경
