@@ -1,7 +1,7 @@
 const { listen } = require('express/lib/application');
-const getConnection = require('../../db');
+const getConnection = require('../../config/db');
 const data = {};
-
+//delete update도 만들기
 selectPostDetail=(req, res, next)=>{//id에 맞는거 정보 가져오기
     let token = req.body.token;
     const {idx } = req.params;
@@ -21,9 +21,9 @@ selectPostDetail=(req, res, next)=>{//id에 맞는거 정보 가져오기
             } else {
                 resultCode = 200;
                 message = 'selectPostDetail 성공';
-                console.log('selectPostDetail 성공');
+                console.log('selectPostDetail 성공: ', rows);
                 res.json({
-                    'data': rows,//select한 정보 보냄
+                    'data': PostData,//select한 정보 보냄
                     'code': resultCode,
                     'message': message
                 });
@@ -63,7 +63,7 @@ selectPostList=(req, res, next)=>{//리스트에 넣을 포스트 정보 가져�
       });
 }
 
-insertPost=(req, res)=>{//sql instert 실행
+insertPost=(req, res)=>{//토큰에서 userId 가져와서 postDB에 같이 저장하게 바꾸기
     console.log("hello");
     var userId = req.body.userId;//userID가 userEmail
     var title = req.body.title;

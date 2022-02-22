@@ -2,9 +2,7 @@ var express = require('express');
 var router = express.Router();
 const controller = require('./join.controller');
 
-/* GET home page. */
 router.get('/login_get', controller.join);
-
 router.post('/login', controller.loginCheck);//로그인 하면 db에 사용자 정보 저장하기
 
 module.exports = router;

@@ -1,6 +1,7 @@
-const getConnection = require('../../db');
-const checkGoogleJWT = require('../../checkJWT');
+const getConnection = require('../../config/db');
+const checkGoogleJWT = require('../../config/checkJWT');
 
+//jwt 생성해서 반환하기
 join = (req, res, next) =>{
     res.send('This is join page haha');
 }
@@ -41,7 +42,7 @@ loginCheck = async(req, res) =>{
         });
 
         conn.release();
-      });     
+    });     
 }
 
 loginFirst = (payload, req, res)=>{
@@ -82,7 +83,7 @@ loginFirst = (payload, req, res)=>{
             }
         });
         conn.release();
-      });
+    });
     
 }
 
